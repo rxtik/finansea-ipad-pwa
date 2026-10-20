@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#102d36">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="FinanSEA">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="icon.svg">
+    <title>FinanSEA</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app">
+      <section id="topbar" class="topbar" aria-label="Finance year controls">
+        <div>
+          <h1>FinanSEA</h1>
+        </div>
+        <div class="top-actions">
+          <label class="field compact">
+            <span>Financial year</span>
+            <select id="yearSelect"></select>
+          </label>
+          <button class="icon-button" id="addYearButton" title="Add next financial year" aria-label="Add next financial year">+</button>
+        </div>
+      </section>
+
+      <section id="calendarPanel" class="calendar-panel">
+        <div class="calendar-heading">
+          <h2 id="calendarTitle">Financial Year</h2>
+        </div>
+        <div id="monthGrid" class="month-grid" aria-label="Financial year months"></div>
+        <div class="calendar-footer">
+          <button id="toggleVoyageButton" class="contracts-button" type="button">
+            <span class="ship-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M4 17h16l-2 4H6l-2-4Z"></path>
+                <path d="M7 17V9h8l3 8"></path>
+                <path d="M9 9V5h4v4"></path>
+                <path d="M2 21c1.4 0 1.4-1 2.8-1s1.4 1 2.8 1 1.4-1 2.8-1 1.4 1 2.8 1 1.4-1 2.8-1 1.4 1 2.8 1 1.4-1 2.8-1"></path>
+              </svg>
+            </span>
+            CONTRACTS
+          </button>
+        </div>
+        <section id="voyagePanel" class="voyage-panel is-hidden" aria-label="Ship sign on and sign off dates">
+          <form id="periodForm" class="voyage-form">
+            <label class="field">
+              <span>Sign on</span>
+              <input id="periodStart" type="date" required>
+            </label>
+            <label class="field">
+              <span>Sign off</span>
+              <input id="periodEnd" type="date" required>
+            </label>
+            <button type="submit" class="primary">Add voyage</button>
+          </form>
+          <div id="periodList" class="voyage-list"></div>
+        </section>
+      </section>
+
+      <section id="detailPanel" class="detail-panel is-hidden" aria-live="polite">
+        <div class="panel-header">
+          <div>
+            <h2 id="selectedMonthTitle">April</h2>
+          </div>
+          <button id="closeDetailButton" class="back-button" type="button" aria-label="Back to months" title="Back to months">&larr;</button>
+        </div>
+
+        <section class="ledger-grid" aria-label="Monthly income and expense entries">
+          <article class="ledger-column">
+            <div class="ledger-head">
+              <h3>INCOME</h3>
+              <strong id="monthIncome">0</strong>
+            </div>
+            <form id="incomeForm" class="ledger-form">
+              <label class="field">
+                <span>Remarks</span>
+                <input id="incomeTag" type="text" required>
+              </label>
+              <label class="field">
+                <span>Amount</span>
+                <input id="incomeAmount" type="number" min="0" step="1" placeholder="0" required>
+              </label>
+              <button type="submit" class="primary tick-button" aria-label="Add income" title="Add income">
+                <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                  <path d="M20 6 9 17l-5-5"></path>
+                </svg>
+              </button>
+            </form>
+            <div id="incomeList" class="entry-list"></div>
+          </article>
+
+          <article class="ledger-column">
+            <div class="ledger-head">
+              <h3>EXPENSE</h3>
+              <strong id="monthOutflow">0</strong>
+            </div>
+            <form id="expenseForm" class="ledger-form">
+              <label class="field">
+                <span>Remarks</span>
+                <input id="expenseTag" type="text" required>
+              </label>
+              <label class="field">
+                <span>Amount</span>
+                <input id="expenseAmount" type="number" min="0" step="1" placeholder="0" required>
+              </label>
+              <button type="submit" class="primary tick-button" aria-label="Add expense" title="Add expense">
+                <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                  <path d="M20 6 9 17l-5-5"></path>
+                </svg>
+              </button>
+            </form>
+            <div id="expenseList" class="entry-list"></div>
+          </article>
+        </section>
+
+        <div class="balance-strip">
+          <span>MONTH BALANCE</span>
+          <strong id="selectedMonthTotal">0</strong>
+        </div>
+      </section>
+    </main>
+
+    <template id="monthTemplate">
+      <button class="month-card" type="button">
+        <span class="month-name"></span>
+        <span class="month-year"></span>
+      </button>
+    </template>
+
+    <script src="app.js"></script>
+    <script>
+      if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("./service-worker.js").catch((error) => {
+            console.error("FinanSEA offline setup could not be registered:", error);
+          });
+        });
+      }
+    </script>
+  </body>
+</html>
